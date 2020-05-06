@@ -1,0 +1,244 @@
+class L2M2019Env(OsimEnv)
+ |  The main OpenAI Gym class. It encapsulates an environment with
+ |  arbitrary behind-the-scenes dynamics. An environment can be
+ |  partially or fully observed.
+ |
+ |  The main API methods that users of this class need to know are:
+ |
+ |      step
+ |      reset
+ |      render
+ |      close
+ |      seed
+ |
+ |  And set the following attributes:
+ |
+ |      action_space: The Space object corresponding to valid actions
+ |      observation_space: The Space object corresponding to valid observations
+ |      reward_range: A tuple corresponding to the min and max possible rewards
+ |
+ |  Note: a default reward range set to [-inf,+inf] already exists. Set it if you want a narrower range.
+ |
+ |  The methods are accessed publicly as "step", "reset", etc.. The
+ |  non-underscored versions are wrapper methods to which we may add
+ |  functionality over time.
+ |
+ |  Method resolution order:
+ |      L2M2019Env
+ |      OsimEnv
+ |      gym.core.Env
+ |      builtins.object
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, visualize=True, integrator_accuracy=5e-05, difficulty=3, seed=None, report=None)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  change_model(self, model='3D', difficulty=3, seed=0)
+ |
+ |  get_model_key(self)
+ |
+ |  get_observation(self)
+ |      ## Values in the observation vector
+ |      # 'vtgt_field': vtgt vectors in body frame (2*11*11 = 242 values)
+ |      # 'pelvis': height, pitch, roll, 6 vel (9 values)
+ |      # for each 'r_leg' and 'l_leg' (*2)
+ |      #   'ground_reaction_forces' (3 values)
+ |      #   'joint' (4 values)
+ |      #   'd_joint' (4 values)
+ |      #   for each of the eleven muscles (*11)
+ |      #       normalized 'f', 'l', 'v' (3 values)
+ |      # 242 + 9 + 2*(3 + 4 + 4 + 11*3) = 339
+ |
+ |  get_observation_clipped(self)
+ |
+ |  get_observation_dict(self)
+ |
+ |  get_observation_space_size(self)
+ |
+ |  get_reward(self)
+ |
+ |  get_reward_1(self)
+ |
+ |  get_reward_2(self)
+ |
+ |  get_state_desc(self)
+ |
+ |  init_reward(self)
+ |
+ |  init_reward_1(self)
+ |
+ |  is_done(self)
+ |
+ |  load_model(self, model_path=None)
+ |
+ |  reset(self, project=True, seed=None, init_pose=None, obs_as_dict=True)
+ |      Resets the state of the environment and returns an initial observation.
+ |
+ |      Returns:
+ |          observation (object): the initial observation.
+ |
+ |  set_difficulty(self, difficulty)
+ |
+ |  step(self, action, project=True, obs_as_dict=True)
+ |      Run one timestep of the environment's dynamics. When end of
+ |      episode is reached, you are responsible for calling `reset()`
+ |      to reset this environment's state.
+ |
+ |      Accepts an action and returns a tuple (observation, reward, done, info).
+ |
+ |      Args:
+ |          action (object): an action provided by the agent
+ |
+ |      Returns:
+ |          observation (object): agent's observation of the current environment
+ |          reward (float) : amount of reward returned after previous action
+ |          done (bool): whether the episode has ended, in which case further step() calls will return undefined results
+ |          info (dict): contains auxiliary diagnostic information (helpful for debugging, and sometimes learning)
+ |
+ |  update_footstep(self)
+ |
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes defined here:
+ |
+ |  G = 9.80665
+ |
+ |  INIT_POSE = array([0.  , 0.  , 0.94, 0.  , 0.  , 0.  , 0.  , 0.  , 0. ...
+ |
+ |  LENGTH0 = 1
+ |
+ |  MASS = 75.16460000000001
+ |
+ |  act2mus = [0, 1, 4, 7, 3, 2, 5, 6, 8, 9, 10, 11, 12, 15, 18, 14, 13, 1...
+ |
+ |  dict_muscle = {'abd': 'HAB', 'add': 'HAD', 'bifemsh': 'BFSH', 'gastroc...
+ |
+ |  footstep = {'l_contact': 1, 'n': 0, 'new': False, 'r_contact': 1}
+ |
+ |  model = '3D'
+ |
+ |  obs_body_space = array([[  0.        ,  -3.14159265,  -3.14159265...3....
+ |
+ |  obs_vtgt_space = array([[-10, -10, -10, -10, -10, -10, -10, -10, ...  ...
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from OsimEnv:
+ |
+ |  get_action_space_size(self)
+ |
+ |  get_prev_state_desc(self)
+ |
+ |  render(self, mode='human', close=False)
+ |      Renders the environment.
+ |
+ |      The set of supported modes varies per environment. (And some
+ |      environments do not support rendering at all.) By convention,
+ |      if mode is:
+ |
+ |      - human: render to the current display or terminal and
+ |        return nothing. Usually for human consumption.
+ |      - rgb_array: Return an numpy.ndarray with shape (x, y, 3),
+ |        representing RGB values for an x-by-y pixel image, suitable
+ |        for turning into a video.
+ |      - ansi: Return a string (str) or StringIO.StringIO containing a
+ |        terminal-style text representation. The text can include newlines
+ |        and ANSI escape sequences (e.g. for colors).
+ |
+ |      Note:
+ |          Make sure that your class's metadata 'render.modes' key includes
+ |            the list of supported modes. It's recommended to call super()
+ |            in implementations to use the functionality of this method.
+ |
+ |      Args:
+ |          mode (str): the mode to render with
+ |
+ |      Example:
+ |
+ |      class MyEnv(Env):
+ |          metadata = {'render.modes': ['human', 'rgb_array']}
+ |
+ |          def render(self, mode='human'):
+ |              if mode == 'rgb_array':
+ |                  return np.array(...) # return RGB frame suitable for video
+ |              elif mode == 'human':
+ |                  ... # pop up a window and render
+ |              else:
+ |                  super(MyEnv, self).render(mode=mode) # just raise an exception
+ |
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes inherited from OsimEnv:
+ |
+ |  action_space = None
+ |
+ |  istep = 0
+ |
+ |  metadata = {'render.modes': ['human'], 'video.frames_per_second': None...
+ |
+ |  model_path = None
+ |
+ |  observation_space = None
+ |
+ |  osim_model = None
+ |
+ |  prev_state_desc = None
+ |
+ |  spec = None
+ |
+ |  time_limit = 10000000000.0
+ |
+ |  verbose = False
+ |
+ |  visualize = False
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from gym.core.Env:
+ |
+ |  __enter__(self)
+ |      Support with-statement for the environment.
+ |
+ |  __exit__(self, *args)
+ |      Support with-statement for the environment.
+ |
+ |  __str__(self)
+ |      Return str(self).
+ |
+ |  close(self)
+ |      Override close in your subclass to perform any necessary cleanup.
+ |
+ |      Environments will automatically close() themselves when
+ |      garbage collected or when the program exits.
+ |
+ |  seed(self, seed=None)
+ |      Sets the seed for this env's random number generator(s).
+ |
+ |      Note:
+ |          Some environments use multiple pseudorandom number generators.
+ |          We want to capture all such seeds used in order to ensure that
+ |          there aren't accidental correlations between multiple generators.
+ |
+ |      Returns:
+ |          list<bigint>: Returns the list of seeds used in this env's random
+ |            number generators. The first value in the list should be the
+ |            "main" seed, or the value which a reproducer should pass to
+ |            'seed'. Often, the main seed equals the provided 'seed', but
+ |            this won't be true if seed=None, for example.
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from gym.core.Env:
+ |
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |
+ |  __weakref__
+ |      list of weak references to the object (if defined)
+ |
+ |  unwrapped
+ |      Completely unwrap this env.
+ |
+ |      Returns:
+ |          gym.Env: The base non-wrapped gym.Env instance
+ |
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes inherited from gym.core.Env:
+ |
+ |  reward_range = (-inf, inf)
